@@ -40,8 +40,7 @@ const Landing = () => {
           className="underline hover:cursor-pointer"
           onClick={handleClickBankerLogin}
         >
-          {" "}
-          Banker Login{" "}
+          Banker Login
         </p>
       </div>
       <div className="flex-1 flex justify-center">
