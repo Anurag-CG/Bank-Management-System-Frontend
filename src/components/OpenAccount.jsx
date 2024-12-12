@@ -17,23 +17,256 @@ const OpenAccount = () => {
     pincode: "",
   };
 
+  const initialValidationMessage = {
+    aadharNumber: "",
+    panNumber: "",
+    firstName: "",
+    lastName: "",
+    fName: "",
+    mName: "",
+    dateOfBirth: "",
+    qualification: "",
+    address: "",
+    city: "",
+    state: "",
+    pincode: "",
+  };
+
+  const indianStatesAndUTs = [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Lakshadweep",
+    "Delhi",
+    "Puducherry",
+    "Ladakh",
+    "Lakshadweep",
+    "Daman and Diu",
+  ];
+
   const [formData, setFormData] = useState(initialFormData);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    // console.log(formData);
   };
+
+  const [validationMessage, setValidationMessage] = useState(
+    initialValidationMessage
+  );
+
+  const validateForm = (formData) => {
+    const aadharRegex = /^[0-9]{16}$/;
+    if (!aadharRegex.test(formData.aadharNumber)) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        aadharNumber: "Please enter valid Aadhar Number",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        aadharNumber: "",
+      }));
+    }
+
+    const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+    if (!panRegex.test(formData.panNumber)) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        panNumber: "Invalid Pan Number",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        panNumber: "",
+      }));
+    }
+
+    const firstNameRegex = /^[a-zA-Z]{1,25}$/;
+    if (!firstNameRegex.test(formData.firstName)) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        firstName: "Invalid First Name",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        firstName: "",
+      }));
+    }
+
+    const lastNameRegex = /^[a-zA-Z]{1,25}$/;
+    if (!lastNameRegex.test(formData.lastName)) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        lastName: "Invalid Last Name",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        lastName: "",
+      }));
+    }
+
+    const fNameRegex = /^[A-Za-z ]{1,50}$/;
+    if (!fNameRegex.test(formData.fName)) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        fName: "Invalid Father Name",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        fName: "",
+      }));
+    }
+
+    if (!fNameRegex.test(formData.mName)) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        mName: "Invalid Mother Name",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        mName: "",
+      }));
+    }
+
+    const calculateAge = (dob) => {
+      const birthDate = new Date(dob);
+      const currentDate = new Date();
+      let age = currentDate.getFullYear() - birthDate.getFullYear();
+      const m = currentDate.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && currentDate.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age;
+    };
+
+    let age = calculateAge(formData.dateOfBirth);
+    if (!age) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        dateOfBirth: "Please select your DOB",
+      }));
+    } else if (age < 18) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        dateOfBirth: "Age must be 18 years or above",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        dateOfBirth: "",
+      }));
+    }
+
+    const cityRegex = /^[a-zA-Z]{1,25}$/;
+    if (!cityRegex.test(formData.city)) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        city: "Enter valid city Name",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        city: "",
+      }));
+    }
+
+    const pincodeRegex = /^[0-9]{6}$/;
+    if (!pincodeRegex.test(formData.pincode)) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        pincode: "Enter valid Pincode",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        pincode: "",
+      }));
+    }
+
+    if (!formData.qualification) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        qualification: "Please select Qualification",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        qualification: "",
+      }));
+    }
+
+    if (!formData.state) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        state: "Please select State",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        state: "",
+      }));
+    }
+    if (!formData.address) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        address: "Enter valid Address",
+      }));
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        address: "",
+      }));
+    }
+  };
+
   const handleSubmit = () => {
+    validateForm(formData);
     console.log(formData);
   };
 
   return (
     <>
-      <form className="flex justify-center items-center flex-col h-[100vh]">
-        {/* <div style="background-image: url('../assets/loginBg.jpg'); background-size: cover; background-position: center;"></div> */}
-        <img className="absolute" src={loginBg}></img>
+      <form className="flex justify-center items-center flex-col">
+        <img
+          className="fixed left-0 top-0 object-cover h-[100%] w-[100%] "
+          src={loginBg}
+        ></img>
 
-        <div className="z-10 opacity-[0.88] bg-slate-100 p-2 rounded font-jetBrain w-[60%] border-slate-300 border-4 flex flex-col gap-2">
-          <h1 className="text-3xl text-center underline">Registration</h1>
+        <div className="z-10 opacity-[0.88] my-6 bg-slate-100 p-2 rounded font-jetBrain w-[60%] border-slate-300 border-4 flex flex-col gap-[0.25rem]">
+          <h1 className="text-3xl text-center underline mb-3">Registration</h1>
+
+          {/* ----------------AadharInput---------------- */}
           <div className="flex">
             <label className="w-1/3">Aadhar Number</label>
             <input
@@ -42,8 +275,15 @@ const OpenAccount = () => {
               onChange={handleChange}
               value={formData.aadharNumber}
               type="text"
+              required
             ></input>
           </div>
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.aadharNumber}
+          </div>
+
+          {/* ---------------- Pan Input----------------- */}
+
           <div className="flex">
             <label className="w-1/3">Pan Number</label>
             <input
@@ -54,6 +294,12 @@ const OpenAccount = () => {
               type="text"
             ></input>
           </div>
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.panNumber}
+          </div>
+
+          {/* ------------------ First Name --------------------- */}
+
           <div className="flex">
             <label className="w-1/3">First Name</label>
             <input
@@ -62,8 +308,15 @@ const OpenAccount = () => {
               onChange={handleChange}
               value={formData.firstName}
               type="text"
+              required
             ></input>
           </div>
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.firstName}
+          </div>
+
+          {/* ------------------- Last Name -------------------- */}
+
           <div className="flex">
             <label className="w-1/3">Last Name</label>
             <input
@@ -72,8 +325,15 @@ const OpenAccount = () => {
               onChange={handleChange}
               value={formData.lastName}
               type="text"
+              required
             ></input>
           </div>
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.lastName}
+          </div>
+
+          {/* --------------------Father Name ----------------- */}
+
           <div className="flex">
             <label className="w-1/3">Father Name</label>
             <input
@@ -82,8 +342,15 @@ const OpenAccount = () => {
               value={formData.fName}
               className="w-2/3"
               type="text"
+              required
             ></input>
           </div>
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.fName}
+          </div>
+
+          {/* ----------------------Mother Name -------------------- */}
+
           <div className="flex">
             <label className="w-1/3">Mother Name</label>
             <input
@@ -92,8 +359,15 @@ const OpenAccount = () => {
               onChange={handleChange}
               value={formData.mName}
               type="text"
+              required
             ></input>
           </div>
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.mName}
+          </div>
+
+          {/* ---------------------Date of Birth--------------------- */}
+
           <div className="flex">
             <label className="w-1/3">Date of Birth</label>
             <input
@@ -102,17 +376,38 @@ const OpenAccount = () => {
               onChange={handleChange}
               value={formData.dateOfBirth}
               type="date"
+              required
             ></input>
           </div>
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.dateOfBirth}
+          </div>
+
+          {/* ---------------------Qualification--------------------- */}
+
           <div className="flex">
             <label className="w-1/3">Qualification</label>
-            <input
+            <select
               className="w-2/3"
               name="qualification"
               onChange={handleChange}
               value={formData.qualification}
-            ></input>
+            >
+              <option value="">--select--</option>
+              <option value="illiterate">Illiterate</option>
+              <option value="10th">10th</option>
+              <option value="12th">12th/Diploma</option>
+              <option value="graduate">Graduate</option>
+              <option value="postGraduate">Post Graduate</option>
+              <option value="doctorate">Doctorate</option>
+            </select>
           </div>
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.qualification}
+          </div>
+
+          {/* --------------------Address------------------------ */}
+
           <div className="flex">
             <label className="w-1/3">Address</label>
             <input
@@ -120,8 +415,39 @@ const OpenAccount = () => {
               name="address"
               onChange={handleChange}
               value={formData.address}
+              required
             ></input>
           </div>
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.address}
+          </div>
+
+          {/* ---------------------State---------------------- */}
+
+          <div className="flex">
+            <label className="w-1/3">State</label>
+            <select
+              className="w-2/3"
+              value={formData.state}
+              onChange={handleChange}
+              name="state"
+            >
+              <option value="">--select--</option>
+              {indianStatesAndUTs.map((item, index) => {
+                return (
+                  <option value={item} key={index}>
+                    {item}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.state}
+          </div>
+
+          {/* ---------------------City------------------- */}
+
           <div className="flex">
             <label className="w-1/3">City</label>
             <input
@@ -129,17 +455,15 @@ const OpenAccount = () => {
               value={formData.city}
               onChange={handleChange}
               name="city"
+              required
             ></input>
           </div>
-          <div className="flex">
-            <label className="w-1/3">State</label>
-            <input
-              className="w-2/3"
-              value={formData.state}
-              onChange={handleChange}
-              name="state"
-            ></input>
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.city}
           </div>
+
+          {/* -----------------------PinCode----------------------- */}
+
           <div className="flex">
             <label className="w-1/3">Pincode</label>
             <input
@@ -147,10 +471,17 @@ const OpenAccount = () => {
               value={formData.pincode}
               onChange={handleChange}
               name="pincode"
+              required
             ></input>
           </div>
-          <div onClick={handleSubmit} className="flex justify-center">
-            <div className="hover:cursor-pointer hover:bg-slate-100 border border-transparent hover:border-[#649568] hover:border w-[30%] rounded bg-slate-300 p-2  text-center">
+          <div className="text-red-500 text-xs font-play-fair font-bold">
+            {validationMessage.pincode}
+          </div>
+          <div className="flex justify-center">
+            <div
+              onClick={handleSubmit}
+              className="hover:cursor-pointer hover:bg-slate-100 border border-transparent hover:border-[#649568] hover:border w-[30%] rounded bg-slate-300 p-2 text-center"
+            >
               Submit
             </div>
           </div>
