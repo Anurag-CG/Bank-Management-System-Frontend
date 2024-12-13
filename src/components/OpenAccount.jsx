@@ -252,7 +252,7 @@ const OpenAccount = () => {
 
   const handleSubmit = () => {
     validateForm(formData);
-    console.log(formData);
+    // console.log(formData);
   };
 
   return (

@@ -1,8 +1,9 @@
 import { useState } from "react";
+import axios from "axios";
 
 const Login = () => {
   const initialFormData = {
-    username: "",
+    userId: "",
     password: "",
   };
 
@@ -14,6 +15,19 @@ const Login = () => {
 
   const handleSubmit = () => {
     console.log(formData);
+    axios
+      .post("http://localhost:8777/user/login", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log("Response:", response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -29,8 +43,9 @@ const Login = () => {
                 type="text"
                 onChange={handleChange}
                 className="p-2 border border-[#649568] w-2/3 mr-4"
-                value={formData.username}
-                name="username"
+                value={formData.userId}
+                name="userId"
+                required
               />
             </div>
             <div className="flex items-center w-full mb-4 ">
