@@ -19,7 +19,7 @@ const BankerLogin = () => {
   return (
     <>
       <div className="w-[100vw] h-[100vh] flex bg-slate-500 justify-center items-center">
-        <div className="bg-white w-[60vw] h-[50vh]  rounded-lg border-slate-100 border-4">
+        <div className="bg-white w-[50vw] h-[50vh]  rounded-lg border-slate-100 border-4">
           <h1 className="text-3xl text-black text-center underline mt-2">
             Login
           </h1>
