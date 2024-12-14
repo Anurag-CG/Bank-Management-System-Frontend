@@ -33,7 +33,7 @@ const Login = () => {
   return (
     <>
       <div className="flex h-[100vh] w-[100vw] justify-center items-center">
-        <div className="bg-slate-300 w-[60vw] h-[50vh]  rounded-lg border-slate-100 border-4">
+        <div className="bg-slate-300 w-[50vw] h-[50vh]  rounded-lg border-slate-100 border-4">
           <h1 className="text-3xl text-center underline mt-2">Login</h1>
 
           <form className="flex flex-col justify-center items-center h-[80%]">
