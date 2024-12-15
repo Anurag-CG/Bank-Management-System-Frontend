@@ -37,7 +37,7 @@ const BankerDelete = () => {
     if (!accountNumber.test(formData.accountNumber)) {
       setValidationMessage((prev) => ({
         ...prev,
-        accountNumber: "Please enter valid Aadhar Number",
+        accountNumber: "Please enter valid Account Number",
       }));
       flag = false;
     } else {
