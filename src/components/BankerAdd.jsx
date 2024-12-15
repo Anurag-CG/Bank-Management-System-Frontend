@@ -80,12 +80,14 @@ const BankerAdd = () => {
   );
 
   const validateForm = (formData) => {
-    const aadharRegex = /^[0-9]{16}$/;
+    let flag = true;
+    const aadharRegex = /^[0-9]{12}$/;
     if (!aadharRegex.test(formData.aadharNumber)) {
       setValidationMessage((prev) => ({
         ...prev,
         aadharNumber: "Please enter valid Aadhar Number",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
@@ -99,6 +101,7 @@ const BankerAdd = () => {
         ...prev,
         panNumber: "Invalid Pan Number",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
@@ -112,6 +115,7 @@ const BankerAdd = () => {
         ...prev,
         firstName: "Invalid First Name",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
@@ -125,6 +129,7 @@ const BankerAdd = () => {
         ...prev,
         lastName: "Invalid Last Name",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
@@ -138,6 +143,7 @@ const BankerAdd = () => {
         ...prev,
         fName: "Invalid Father Name",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
@@ -150,6 +156,7 @@ const BankerAdd = () => {
         ...prev,
         mName: "Invalid Mother Name",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
@@ -174,11 +181,13 @@ const BankerAdd = () => {
         ...prev,
         dateOfBirth: "Please select your DOB",
       }));
+      flag = false;
     } else if (age < 18) {
       setValidationMessage((prev) => ({
         ...prev,
         dateOfBirth: "Age must be 18 years or above",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
@@ -192,6 +201,7 @@ const BankerAdd = () => {
         ...prev,
         city: "Enter valid city Name",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
@@ -205,6 +215,7 @@ const BankerAdd = () => {
         ...prev,
         pincode: "Enter valid Pincode",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
@@ -217,6 +228,7 @@ const BankerAdd = () => {
         ...prev,
         qualification: "Please select Qualification",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
@@ -229,6 +241,7 @@ const BankerAdd = () => {
         ...prev,
         state: "Please select State",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
@@ -240,17 +253,33 @@ const BankerAdd = () => {
         ...prev,
         address: "Enter valid Address",
       }));
+      flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
         address: "",
       }));
     }
+    return flag;
   };
 
   const handleSubmit = () => {
-    validateForm(formData);
     console.log(formData);
+    if (validateForm(formData)) {
+      axios
+        .post("http://localhost:8777/bank/addUser", formData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          console.log("Response:", response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          console.error("Error:", error);
+        });
+    }
   };
 
   return (
