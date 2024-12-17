@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import axios from "axios";
 const UpdateUser = () => {
   const initialData = {
     accountNumber: "",
@@ -13,8 +13,8 @@ const UpdateUser = () => {
     panNumber: "",
     firstName: "",
     lastName: "",
-    fName: "",
-    mName: "",
+    fname: "",
+    mname: "",
     dateOfBirth: "",
     qualification: "",
     address: "",
@@ -92,47 +92,53 @@ const UpdateUser = () => {
   };
   const handleSubmitCheckBalance = () => {
     if (validateForm(formData)) {
-      // axios
-      //   .get(
-      //     `http://localhost:8777/bank/viewBalance/${formData.accountNumber}`,
-      //     {
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //     }
-      //   )
-      //   .then((response) => {
-      //     console.log("Response:", response.data);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //     console.error("Error:", error);
-      //   });
-      setBalance(100);
+      axios
+        .get(
+          `http://localhost:8777/bank/viewBalance?accountNumber=${formData.accountNumber}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response:", response.data);
+          setResponseMessage(`Rs. ${response.data}`);
+        })
+        .catch((error) => {
+          console.log(error);
+          console.error("Error:", error);
+        });
+      // setBalance(100);
       setProfileDataToUpdate(initialProfileDataToUpdate);
     }
   };
   const handleSubmitUpdateProfile = () => {
     if (validateForm(formData)) {
-      // axios
-      //   .get(`http://localhost:8777/bank/findUser/${formData.accountNumber}`, {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   })
-      //   .then((response) => {
-      //     console.log("Response:", response.data);
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //     console.error("Error:", error);
-      //   });
+      axios
+        .get(
+          `http://localhost:8777/bank/findUser?accountNumber=${formData.accountNumber}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response:", response.data);
+          setProfileDataToUpdate(response.data);
+          // console.log(formData);
+        })
+        .catch((error) => {
+          console.log(error);
+          console.error("Error:", error);
+        });
     }
     setBalance(null);
   };
 
   const handleChangeUpdateProfile = (e) => {
-    console.log(profileDataToUpdate, initialProfileDataToUpdate);
+    // console.log(profileDataToUpdate, initialProfileDataToUpdate);
     setProfileDataToUpdate((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -201,30 +207,30 @@ const UpdateUser = () => {
       }));
     }
 
-    const fNameRegex = /^[A-Za-z ]{1,50}$/;
-    if (!fNameRegex.test(profileDataToUpdate.fName)) {
+    const fnameRegex = /^[A-Za-z ]{1,50}$/;
+    if (!fnameRegex.test(profileDataToUpdate.fname)) {
       setValidationMessage((prev) => ({
         ...prev,
-        fName: "Invalid Father Name",
+        fname: "Invalid Father Name",
       }));
       flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
-        fName: "",
+        fname: "",
       }));
     }
 
-    if (!fNameRegex.test(profileDataToUpdate.mName)) {
+    if (!fnameRegex.test(profileDataToUpdate.mname)) {
       setValidationMessage((prev) => ({
         ...prev,
-        mName: "Invalid Mother Name",
+        mname: "Invalid Mother Name",
       }));
       flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
-        mName: "",
+        mname: "",
       }));
     }
 
@@ -326,9 +332,27 @@ const UpdateUser = () => {
     }
     return flag;
   };
-
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isError, setIsError] = useState(false);
   const handleSubmitUpdateProfileFinal = () => {
-    validateProfileDataToUpdate(profileDataToUpdate);
+    if (validateProfileDataToUpdate(profileDataToUpdate))
+      axios
+        .put("http://localhost:8777/bank/updateUser", profileDataToUpdate, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          console.log("Response:", response.data);
+          setResponseMessage("Profile Updated successfully");
+          setProfileDataToUpdate(initialProfileDataToUpdate);
+          setIsError(false);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          setResponseMessage("Error, something went wrong");
+          setIsError(true);
+        });
   };
   return (
     <>
@@ -360,13 +384,20 @@ const UpdateUser = () => {
               Update Profile
             </div>
           </div>
+          <div
+            className={`text-center ${
+              isError ? "text-red-600" : "text-green-600"
+            } `}
+          >
+            {responseMessage}
+          </div>
         </form>
         {balance && (
           <div className="bg-slate-300 rounded w-[100%] p-2 my-8 flex flex-col gap-2 text-center">
             Your Account Balance is : {balance}
           </div>
         )}
-        {!checkInitialProfileDataChanged() && (
+        {checkInitialProfileDataChanged() && (
           <>
             <form className="flex justify-center items-center flex-col">
               {/* <img
@@ -450,16 +481,16 @@ const UpdateUser = () => {
                 <div className="flex">
                   <label className="w-1/3">Father Name</label>
                   <input
-                    name="fName"
+                    name="fname"
                     onChange={handleChangeUpdateProfile}
-                    value={profileDataToUpdate.fName}
+                    value={profileDataToUpdate.fname}
                     className="w-2/3"
                     type="text"
                     required
                   ></input>
                 </div>
                 <div className="text-red-500 text-xs font-play-fair font-bold">
-                  {validationMessage.fName}
+                  {validationMessage.fname}
                 </div>
 
                 {/* ----------------------Mother Name -------------------- */}
@@ -468,15 +499,15 @@ const UpdateUser = () => {
                   <label className="w-1/3">Mother Name</label>
                   <input
                     className="w-2/3"
-                    name="mName"
+                    name="mname"
                     onChange={handleChangeUpdateProfile}
-                    value={profileDataToUpdate.mName}
+                    value={profileDataToUpdate.mname}
                     type="text"
                     required
                   ></input>
                 </div>
                 <div className="text-red-500 text-xs font-play-fair font-bold">
-                  {validationMessage.mName}
+                  {validationMessage.mname}
                 </div>
 
                 {/* ---------------------Date of Birth--------------------- */}
