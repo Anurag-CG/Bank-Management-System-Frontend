@@ -1,12 +1,13 @@
 import { useState } from "react";
+import axios from "axios";
 const BankerAdd = () => {
   const initialFormData = {
     aadharNumber: "",
     panNumber: "",
     firstName: "",
     lastName: "",
-    fName: "",
-    mName: "",
+    fname: "",
+    mname: "",
     dateOfBirth: "",
     qualification: "",
     address: "",
@@ -20,8 +21,8 @@ const BankerAdd = () => {
     panNumber: "",
     firstName: "",
     lastName: "",
-    fName: "",
-    mName: "",
+    fname: "",
+    mname: "",
     dateOfBirth: "",
     qualification: "",
     address: "",
@@ -137,30 +138,30 @@ const BankerAdd = () => {
       }));
     }
 
-    const fNameRegex = /^[A-Za-z ]{1,50}$/;
-    if (!fNameRegex.test(formData.fName)) {
+    const fnameRegex = /^[A-Za-z ]{1,50}$/;
+    if (!fnameRegex.test(formData.fname)) {
       setValidationMessage((prev) => ({
         ...prev,
-        fName: "Invalid Father Name",
+        fname: "Invalid Father Name",
       }));
       flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
-        fName: "",
+        fname: "",
       }));
     }
 
-    if (!fNameRegex.test(formData.mName)) {
+    if (!fnameRegex.test(formData.mname)) {
       setValidationMessage((prev) => ({
         ...prev,
-        mName: "Invalid Mother Name",
+        mname: "Invalid Mother Name",
       }));
       flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
-        mName: "",
+        mname: "",
       }));
     }
 
@@ -262,7 +263,8 @@ const BankerAdd = () => {
     }
     return flag;
   };
-
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isError, SetIsError] = useState(false);
   const handleSubmit = () => {
     console.log(formData);
     if (validateForm(formData)) {
@@ -274,10 +276,14 @@ const BankerAdd = () => {
         })
         .then((response) => {
           console.log("Response:", response.data);
+          setResponseMessage(response.data);
+          SetIsError(false);
         })
         .catch((error) => {
           console.log(error);
           console.error("Error:", error);
+          setResponseMessage(error.response.data);
+          SetIsError(true);
         });
     }
   };
@@ -356,16 +362,16 @@ const BankerAdd = () => {
         <div className="flex">
           <label className="w-1/3">Father Name</label>
           <input
-            name="fName"
+            name="fname"
             onChange={handleChange}
-            value={formData.fName}
+            value={formData.fname}
             className="w-2/3"
             type="text"
             required
           ></input>
         </div>
         <div className="text-red-600 text-xs font-play-fair font-bold">
-          {validationMessage.fName}
+          {validationMessage.fname}
         </div>
 
         {/* ----------------------Mother Name -------------------- */}
@@ -374,15 +380,15 @@ const BankerAdd = () => {
           <label className="w-1/3">Mother Name</label>
           <input
             className="w-2/3"
-            name="mName"
+            name="mname"
             onChange={handleChange}
-            value={formData.mName}
+            value={formData.mname}
             type="text"
             required
           ></input>
         </div>
         <div className="text-red-600 text-xs font-play-fair font-bold">
-          {validationMessage.mName}
+          {validationMessage.mname}
         </div>
 
         {/* ---------------------Date of Birth--------------------- */}
@@ -503,6 +509,13 @@ const BankerAdd = () => {
           >
             Submit
           </div>
+        </div>
+        <div
+          className={`text-center ${
+            isError ? "text-red-600" : "text-green-600"
+          } `}
+        >
+          {responseMessage}
         </div>
       </form>
     </>

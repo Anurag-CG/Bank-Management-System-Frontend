@@ -48,12 +48,14 @@ const BankerDelete = () => {
     }
     return flag;
   };
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isError, SetIsError] = useState(false);
   const handleSubmit = () => {
     if (validateForm(formData)) {
       console.log(formData);
       axios
         .delete(
-          `http://localhost:8777/bank/deleteUser/${formData.accountNumber}/${formData.aadharNumber}`,
+          `http://localhost:8777/bank/deleteUser?accountNumber=${formData.accountNumber}&aadharNumber=${formData.aadharNumber}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -62,9 +64,13 @@ const BankerDelete = () => {
         )
         .then((response) => {
           console.log("Response:", response.data);
+          setResponseMessage(response.data);
+          SetIsError(false);
         })
         .catch((error) => {
           console.error("Error:", error);
+          setResponseMessage("User not found");
+          SetIsError(true);
         });
     }
   };
@@ -109,6 +115,13 @@ const BankerDelete = () => {
           >
             Submit
           </div>
+        </div>
+        <div
+          className={`text-center ${
+            isError ? "text-red-600" : "text-green-600"
+          } `}
+        >
+          {responseMessage}
         </div>
       </form>
     </>
