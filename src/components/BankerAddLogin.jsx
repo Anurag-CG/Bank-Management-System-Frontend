@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 const BankerAddLogin = () => {
   const initialFormData = {
@@ -34,10 +35,63 @@ const BankerAddLogin = () => {
       }));
     }
 
+    const userId = /^[A-Za-z]{1,}[A-Za-z\d]{4,}$/;
+    if (!userId.test(formData.userId)) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        userId:
+          "User ID must have one starting alphabet character followed by alphabet or number and total length of atleast 5",
+      }));
+      flag = false;
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        userId: "",
+      }));
+    }
+
+    const password =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    if (!password.test(formData.password)) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        password:
+          "Password must be at least 8 characters long, contain at least one letter, one digit, and one special character (!@#$%^&*).",
+      }));
+      flag = false;
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        password: "",
+      }));
+    }
     return flag;
   };
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isError, SetIsError] = useState(false);
   const handleSubmit = () => {
     if (validateForm()) {
+      axios
+        .post(
+          `http://localhost:8777/bank/addLogin?accountNumber=${formData.accountNumber}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response:", response.data);
+          setResponseMessage(response.data);
+          SetIsError(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          console.error("Error:", error);
+          setResponseMessage(error.response.data);
+          SetIsError(true);
+        });
     }
   };
 
@@ -59,7 +113,7 @@ const BankerAddLogin = () => {
           {validationMessage.accountNumber}
         </div>
         <div className="flex">
-          <label className="w-1/3">User Id</label>
+          <label className="w-1/3">User ID</label>
           <input
             className="w-2/3"
             name="userId"
@@ -93,6 +147,13 @@ const BankerAddLogin = () => {
           >
             Create
           </div>
+        </div>
+        <div
+          className={`text-center ${
+            isError ? "text-red-600" : "text-green-600"
+          } `}
+        >
+          {responseMessage}
         </div>
       </form>
     </>
