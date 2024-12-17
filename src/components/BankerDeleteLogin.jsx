@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 const BankerDeleteLogin = () => {
   const initialFormData = {
@@ -33,11 +34,47 @@ const BankerDeleteLogin = () => {
         accountNumber: "",
       }));
     }
+    const userId = /^[A-Za-z]{1,}[A-Za-z\d]{4,}$/;
+    if (!userId.test(formData.userId)) {
+      setValidationMessage((prev) => ({
+        ...prev,
+        userId:
+          "User ID must have one starting alphabet character followed by alphabet or number and total length of atleast 5",
+      }));
+      flag = false;
+    } else {
+      setValidationMessage((prev) => ({
+        ...prev,
+        userId: "",
+      }));
+    }
 
     return flag;
   };
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isError, SetIsError] = useState(false);
   const handleSubmit = () => {
     if (validateForm()) {
+      axios
+        .delete(
+          `http://localhost:8777/bank/deleteLogin?accountNumber=${formData.accountNumber}&userId=${formData.userId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response:", response.data);
+          setResponseMessage(response.data);
+          SetIsError(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          console.error("Error:", error);
+          setResponseMessage(error.response.data);
+          SetIsError(true);
+        });
     }
   };
 
@@ -79,6 +116,13 @@ const BankerDeleteLogin = () => {
           >
             Delete
           </div>
+        </div>
+        <div
+          className={`text-center ${
+            isError ? "text-red-600" : "text-green-600"
+          } `}
+        >
+          {responseMessage}
         </div>
       </form>
     </>
