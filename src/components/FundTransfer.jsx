@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import axios from "axios";
 const FundTransfer = () => {
   const initialFormData = {
     senderAccount: "",
@@ -19,6 +19,7 @@ const FundTransfer = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
   const validateForm = () => {
+    console.log("Hi");
     let flag = true;
     const accountNumber = /^[789]{1}[0-9]{9}$/;
     if (!accountNumber.test(formData.receiverAccount)) {
@@ -56,14 +57,34 @@ const FundTransfer = () => {
         ...prev,
         balance: "",
       }));
-      flag = false;
     }
     return flag;
   };
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isError, SetIsError] = useState(false);
   const handleSubmit = () => {
     if (validateForm()) {
+      axios
+        .post(`http://localhost:8777/bank/fundtransfer`, formData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          console.log("Response:", response.data);
+          setResponseMessage(
+            `Rs. ${formData.balance} Amount Transferred successfully`
+          );
+          SetIsError(false);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          setResponseMessage(error.response.data);
+          SetIsError(true);
+        });
     }
   };
+
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">
@@ -118,6 +139,14 @@ const FundTransfer = () => {
           >
             Transfer
           </div>
+        </div>
+
+        <div
+          className={`text-center ${
+            isError ? "text-red-600" : "text-green-600"
+          } `}
+        >
+          {responseMessage}
         </div>
       </form>
     </>
