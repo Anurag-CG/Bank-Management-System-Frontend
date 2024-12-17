@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import axios from "axios";
 const CreditTransaction = () => {
   const initialFormData = {
     accountNumber: "",
@@ -45,8 +45,29 @@ const CreditTransaction = () => {
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isError, SetIsError] = useState(false);
   const handleSubmit = () => {
     if (validateForm()) {
+      axios
+        .post(
+          `http://localhost:8777/bank/credit?amount=${formData.amount}&accountNumber=${formData.accountNumber}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Response:", response.data);
+          setResponseMessage(response.data);
+          SetIsError(false);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          setResponseMessage("Account not found");
+          SetIsError(true);
+        });
     }
   };
   return (
@@ -87,6 +108,13 @@ const CreditTransaction = () => {
           >
             Transfer
           </div>
+        </div>
+        <div
+          className={`text-center ${
+            isError ? "text-red-600" : "text-green-600"
+          } `}
+        >
+          {responseMessage}
         </div>
       </form>
     </>
