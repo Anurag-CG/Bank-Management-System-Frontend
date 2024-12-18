@@ -7,6 +7,7 @@ export default {
         "play-fair": ["Playfair Display", "serif"],
         basker: ["Baskerville", "sans-serif"],
         jetBrain: ["JetBrains Mono", "sans-serif"],
+        futura: ["Futura PT", "sans-serif"],
       },
     },
   },
