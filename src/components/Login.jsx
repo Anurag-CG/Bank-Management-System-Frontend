@@ -32,7 +32,14 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex h-[100vh] w-[100vw] justify-center items-center">
+      <div
+        className="flex h-[100vh] w-[100vw] justify-center items-center"
+        style={{
+          background: "rgb(0,166,16)",
+          background:
+            "radial-gradient(circle, rgba(0,166,16,1) 0%, rgba(9,36,0,1) 67%)",
+        }}
+      >
         <div className="bg-slate-300 w-[50vw] h-[50vh]  rounded-lg border-slate-100 border-4">
           <h1 className="text-3xl text-center underline mt-2">Login</h1>
 
