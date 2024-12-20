@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const initialFormData = {
@@ -16,7 +17,7 @@ const Login = () => {
   const handleSubmit = () => {
     console.log(formData);
     axios
-      .post("http://localhost:8777/user/login", formData, {
+      .post("http://localhost:8777/login/user", formData, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -35,15 +36,14 @@ const Login = () => {
       <div
         className="flex h-[100vh] w-[100vw] justify-center items-center"
         style={{
-          background: "rgb(0,166,16)",
           background:
-            "radial-gradient(circle, rgba(0,166,16,1) 0%, rgba(9,36,0,1) 67%)",
+            "radial-gradient(circle, rgba(0,166,16,1) 2%, rgba(9,36,0,1) 47%)",
         }}
       >
-        <div className="bg-slate-300 w-[50vw] h-[50vh]  rounded-lg border-slate-100 border-4">
+        <div className="bg-slate-300 w-[50vw] h-[50vh]  rounded-lg font-play-fair border-slate-100 border-4">
           <h1 className="text-3xl text-center underline mt-2">Login</h1>
 
-          <form className="flex flex-col justify-center items-center h-[80%]">
+          <form className="relative flex flex-col justify-center items-center h-[80%]">
             <div className="flex items-center w-full mb-4">
               <label className="w-1/3 text-xl mr-4 text-end">Username:</label>
               <input
@@ -71,6 +71,12 @@ const Login = () => {
             >
               Submit
             </div>
+            <Link
+              className="font-basker text-sm absolute bottom-0 right-3 underline"
+              to="/register"
+            >
+              Register Yourself
+            </Link>
           </form>
         </div>
       </div>

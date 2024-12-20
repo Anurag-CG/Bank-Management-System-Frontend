@@ -14,6 +14,10 @@ const Landing = () => {
     navigate("/bankerLogin");
   };
 
+  const handleClickAdminLogin = () => {
+    navigate("/adminLogin");
+  };
+
   return (
     <div className="flex p-4 h-[100vh]">
       <div className="flex flex-1 flex-col">
@@ -23,13 +27,14 @@ const Landing = () => {
           </h1>
           <div className="flex mt-8 gap-8">
             <div
-              className="hover:cursor-pointer hover:bg-slate-100 hover:text-[#649568] rounded-full bg-slate-300 text-[#0e100f] w-[33%] p-2 text-center"
+              className="hover:cursor-pointer hover:bg-slate-100 hover:text-[#649568] rounded-full bg-slate-300 text-[#0e100f] w-[33%] p-2 text-center transition-colors duration-300"
               onClick={handleClickOpenAccount}
             >
               Open Account
             </div>
             <div
-              className="hover:cursor-pointer hover:bg-slate-200 hover:text-[#649568] rounded-full border-2 w-[33%] border-slate-300 text-slate-300 p-2 text-center"
+              className="hover:cursor-pointer hover:bg-slate-200 hover:text-[#649568] rounded-full border-2 w-[33%] border-slate-300 text-slate-300 p-2 text-center
+              transition-colors duration-300"
               onClick={handleClickLogin}
             >
               Login
@@ -37,10 +42,16 @@ const Landing = () => {
           </div>
         </div>
         <p
-          className="underline hover:cursor-pointer"
+          className="underline hover:cursor-pointer font-basker"
           onClick={handleClickBankerLogin}
         >
           Banker Login
+        </p>
+        <p
+          className="underline hover:cursor-pointer font-basker"
+          onClick={handleClickAdminLogin}
+        >
+          Admin Login
         </p>
       </div>
       <div className="flex-1 flex justify-center">

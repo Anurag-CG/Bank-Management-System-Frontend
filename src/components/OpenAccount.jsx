@@ -1,14 +1,15 @@
 import { useState } from "react";
 import loginBg from "../assets/loginBg.jpg";
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const OpenAccount = () => {
   const initialFormData = {
     aadharNumber: "",
     panNumber: "",
     firstName: "",
     lastName: "",
-    fName: "",
-    mName: "",
+    fname: "",
+    mname: "",
     dateOfBirth: "",
     qualification: "",
     address: "",
@@ -22,8 +23,8 @@ const OpenAccount = () => {
     panNumber: "",
     firstName: "",
     lastName: "",
-    fName: "",
-    mName: "",
+    fname: "",
+    mname: "",
     dateOfBirth: "",
     qualification: "",
     address: "",
@@ -139,30 +140,30 @@ const OpenAccount = () => {
       }));
     }
 
-    const fNameRegex = /^[A-Za-z ]{1,50}$/;
-    if (!fNameRegex.test(formData.fName)) {
+    const fnameRegex = /^[A-Za-z ]{1,50}$/;
+    if (!fnameRegex.test(formData.fname)) {
       setValidationMessage((prev) => ({
         ...prev,
-        fName: "Invalid Father Name",
+        fname: "Invalid Father Name",
       }));
       flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
-        fName: "",
+        fname: "",
       }));
     }
 
-    if (!fNameRegex.test(formData.mName)) {
+    if (!fnameRegex.test(formData.mname)) {
       setValidationMessage((prev) => ({
         ...prev,
-        mName: "Invalid Mother Name",
+        mname: "Invalid Mother Name",
       }));
       flag = false;
     } else {
       setValidationMessage((prev) => ({
         ...prev,
-        mName: "",
+        mname: "",
       }));
     }
 
@@ -264,9 +265,29 @@ const OpenAccount = () => {
     }
     return flag;
   };
-
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isError, SetIsError] = useState(false);
+  const navigate = useNavigate();
   const handleSubmit = () => {
     if (validateForm(formData)) {
+      axios
+        .post(`http://localhost:8777/user/addUser`, formData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          setResponseMessage(response.data);
+          alert(`${response.data}`);
+          SetIsError(false);
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log(error);
+          setResponseMessage(error.response.data);
+          SetIsError(true);
+        });
     }
     // console.log(formData);
   };
@@ -278,7 +299,6 @@ const OpenAccount = () => {
           className="fixed left-0 top-0 object-cover h-[100%] w-[100%] "
           src={loginBg}
         ></img>
-
         <div className="z-10 opacity-[0.88] my-6 bg-slate-100 p-2 rounded font-jetBrain w-[60%] border-slate-300 border-4 flex flex-col gap-[0.25rem]">
           <h1 className="text-3xl text-center underline mb-3">Registration</h1>
 
@@ -353,16 +373,16 @@ const OpenAccount = () => {
           <div className="flex">
             <label className="w-1/3">Father Name</label>
             <input
-              name="fName"
+              name="fname"
               onChange={handleChange}
-              value={formData.fName}
+              value={formData.fname}
               className="w-2/3"
               type="text"
               required
             ></input>
           </div>
           <div className="text-red-500 text-xs font-play-fair font-bold">
-            {validationMessage.fName}
+            {validationMessage.fname}
           </div>
 
           {/* ----------------------Mother Name -------------------- */}
@@ -371,15 +391,15 @@ const OpenAccount = () => {
             <label className="w-1/3">Mother Name</label>
             <input
               className="w-2/3"
-              name="mName"
+              name="mname"
               onChange={handleChange}
-              value={formData.mName}
+              value={formData.mname}
               type="text"
               required
             ></input>
           </div>
           <div className="text-red-500 text-xs font-play-fair font-bold">
-            {validationMessage.mName}
+            {validationMessage.mname}
           </div>
 
           {/* ---------------------Date of Birth--------------------- */}
@@ -500,6 +520,13 @@ const OpenAccount = () => {
             >
               Submit
             </div>
+          </div>
+          <div
+            className={`text-center z-40 ${
+              isError ? "text-red-600" : "text-green-600"
+            } `}
+          >
+            {responseMessage}
           </div>
         </div>
       </form>

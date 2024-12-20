@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+import { Link } from "react-router-dom";
+
 const Profile = () => {
   const indianStatesAndUTs = [
     "Andhra Pradesh",
@@ -230,6 +232,11 @@ const Profile = () => {
             {isEditable ? "Save" : "Update"}
           </h1>
         </button>
+      </div>
+      <div className="text-end mb-10 mr-4 font-play-fair">
+        <Link to="/root/changePassword" className="hover:text-green-200">
+          Change Password
+        </Link>
       </div>
     </>
   );

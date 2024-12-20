@@ -280,9 +280,10 @@ const BankerAdd = () => {
           SetIsError(false);
         })
         .catch((error) => {
-          console.log(error);
           console.error("Error:", error);
-          setResponseMessage(error.response.data);
+          if (error?.response?.data?.error)
+            setResponseMessage(error.response.data.error);
+          else setResponseMessage(error.response.data);
           SetIsError(true);
         });
     }

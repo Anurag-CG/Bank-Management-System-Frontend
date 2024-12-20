@@ -17,13 +17,13 @@ const Navbar = () => {
               Profile
             </Link>
             <Link
-              to="/FundTransfer"
+              to="/root/fundTransfer"
               className="text-green-500 hover:text-green-200 transition-colors duration-300"
             >
               Fund Transfer
             </Link>
             <Link
-              to="/balance"
+              to="/root/balance"
               className="text-green-500 hover:text-green-200 transition-colors duration-300"
             >
               Check Balance
