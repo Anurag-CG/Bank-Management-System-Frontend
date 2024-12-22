@@ -2,20 +2,31 @@ import { useState } from "react";
 import axios from "axios";
 
 const DebitTransaction = () => {
+  // Initial form data
   const initialFormData = {
     accountNumber: "",
     amount: "",
   };
+
+  // Initial validation message
   const initialValidationMessage = {
     accountNumber: "",
     amount: "",
   };
+
+  // State to store form data
   const [formData, setFormData] = useState(initialFormData);
+
+  // State to store validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
+
+  // Function to validate form
   const validateForm = () => {
     let flag = true;
+
+    // Regular expression for account number
     const accountNumber = /^[789]{1}[0-9]{9}$/;
     if (!accountNumber.test(formData.accountNumber)) {
       setValidationMessage((prev) => ({
@@ -29,6 +40,8 @@ const DebitTransaction = () => {
         accountNumber: "",
       }));
     }
+
+    // validate amount
     if (formData.amount <= 0) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -43,34 +56,49 @@ const DebitTransaction = () => {
     }
     return flag;
   };
+
+  // Function to handle change in input fields
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // State to store response message
   const [responseMessage, setResponseMessage] = useState("");
+
+  // State to store error status
   const [isError, SetIsError] = useState(false);
+
+  // Function to handle form submission
   const handleSubmit = () => {
     if (validateForm()) {
       axios
         .post(
           `http://localhost:8777/bank/debit?amount=${formData.amount}&accountNumber=${formData.accountNumber}`,
+          null,
           {
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("bankerToken")}`,
             },
           }
         )
         .then((response) => {
           console.log("Response:", response.data);
           setResponseMessage(response.data);
+          setFormData(initialFormData);
           SetIsError(false);
         })
         .catch((error) => {
           console.error("Error:", error);
-          setResponseMessage("Account not found");
+          if (error?.response?.data?.error)
+            setResponseMessage("You don't have permission to add user");
+          else setResponseMessage("Account not found");
           SetIsError(true);
         });
     }
   };
+
+  // return the jsx component
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">

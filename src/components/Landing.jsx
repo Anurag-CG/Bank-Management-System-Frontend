@@ -3,21 +3,30 @@ import BankImg from "../assets/BankImage.svg";
 import { useNavigate } from "react-router-dom";
 
 const Landing = () => {
+  // Function to navigate to different pages
   const navigate = useNavigate();
+
+  // handleClickOpenAccount function to navigate to openAccount page
   const handleClickOpenAccount = () => {
     navigate("/openAccount");
   };
+
+  // handleClickLogin function to navigate to login page
   const handleClickLogin = () => {
     navigate("/login");
   };
+
+  // handleClickBankerLogin function to navigate to bankerLogin page
   const handleClickBankerLogin = () => {
     navigate("/bankerLogin");
   };
 
+  // handleClickAdminLogin function to navigate to adminLogin page
   const handleClickAdminLogin = () => {
     navigate("/adminLogin");
   };
 
+  // return landing page component
   return (
     <div className="flex p-4 h-[100vh]">
       <div className="flex flex-1 flex-col">

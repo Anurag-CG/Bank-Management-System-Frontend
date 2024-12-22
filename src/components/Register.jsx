@@ -2,27 +2,38 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const Register = () => {
+  // Initial form data
   const initialFormData = {
     accountNumber: "",
     aadharNumber: "",
     loginId: "",
     password: "",
   };
+  // Initial validation message
   const initialValidationMessage = {
     accountNumber: "",
     aadharNumber: "",
     loginId: "",
     password: "",
   };
+
+  // state for form data
   const [formData, setFormData] = useState(initialFormData);
+
+  // state for validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
+
+  // handle change function
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // validate form function
   const validateForm = () => {
     let flag = true;
+    // Account Number validation
     const accountNumber = /^[789]{1}[0-9]{9}$/;
     if (!accountNumber.test(formData.accountNumber)) {
       setValidationMessage((prev) => ({
@@ -37,6 +48,7 @@ const Register = () => {
       }));
     }
 
+    // loginId validation
     const loginId = /^[A-Za-z]{1,}[A-Za-z\d]{4,}$/;
     if (!loginId.test(formData.loginId)) {
       setValidationMessage((prev) => ({
@@ -52,6 +64,7 @@ const Register = () => {
       }));
     }
 
+    //password validation
     const password =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     if (!password.test(formData.password)) {
@@ -69,13 +82,22 @@ const Register = () => {
     }
     return flag;
   };
+
+  // state for response message
   const [responseMessage, setResponseMessage] = useState("");
+
+  // state for error
   const [isError, SetIsError] = useState(false);
+
+  // navigate hook
   const navigate = useNavigate();
+
+  // handle submit function
   const handleSubmit = () => {
     if (validateForm()) {
+      // API call
       axios
-        .post(`http://localhost:8777/user/addLogin?accountNumber`, formData, {
+        .post(`http://localhost:8777/user/addLogin`, formData, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -96,6 +118,7 @@ const Register = () => {
     }
   };
 
+  // return the jsx component for Register
   return (
     <div className="flex justify-center items-center min-h-[100vh] font-futura">
       <form className="bg-slate-300 rounded w-[50%] p-8 my-8 flex flex-col gap-2">
@@ -150,7 +173,7 @@ const Register = () => {
             name="password"
             onChange={handleChange}
             value={formData.password}
-            type="text"
+            type="password"
             required
           ></input>
         </div>

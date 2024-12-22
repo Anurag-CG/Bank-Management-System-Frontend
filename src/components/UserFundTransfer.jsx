@@ -1,26 +1,38 @@
 import { useState } from "react";
 import axios from "axios";
 const UserFundTransfer = () => {
+  // Initial form data
   const initialFormData = {
     senderAccount: "",
     receiverAccount: "",
     balance: "",
   };
+
+  // Initial validation message
   const initialValidationMessage = {
     senderAccount: "",
     receiverAccount: "",
     balance: "",
   };
+
+  // State variables
   const [formData, setFormData] = useState(initialFormData);
+
+  // State variable for validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
 
+  // Function to handle change in input fields
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // Function to validate form
   const validateForm = () => {
     let flag = true;
+
+    // Regular expression for account number
     const accountNumber = /^[789]{1}[0-9]{9}$/;
     if (!accountNumber.test(formData.receiverAccount)) {
       setValidationMessage((prev) => ({
@@ -34,6 +46,8 @@ const UserFundTransfer = () => {
         receiverAccount: "",
       }));
     }
+
+    // validate sender's account number
     if (!accountNumber.test(formData.senderAccount)) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -46,6 +60,8 @@ const UserFundTransfer = () => {
         senderAccount: "",
       }));
     }
+
+    // validate balance
     if (formData.balance <= 0) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -60,14 +76,18 @@ const UserFundTransfer = () => {
     }
     return flag;
   };
+
+  // State variables for response message and error
   const [responseMessage, setResponseMessage] = useState("");
   const [isError, SetIsError] = useState(false);
   const handleSubmit = () => {
     if (validateForm()) {
+      // API call to transfer fund
       axios
-        .post(`http://localhost:8777/bank/fundtransfer`, formData, {
+        .post(`http://localhost:8777/user/fund_transfer`, formData, {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
           },
         })
         .then((response) => {
@@ -84,6 +104,8 @@ const UserFundTransfer = () => {
         });
     }
   };
+
+  // Return component for UserFundTransfer
   return (
     <>
       <div className="flex justify-center items-center min-h-[100vh] font-futura">

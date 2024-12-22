@@ -1,20 +1,30 @@
 import { useState } from "react";
 import axios from "axios";
 const CreditTransaction = () => {
+  // state to store initial form data
   const initialFormData = {
     accountNumber: "",
     amount: "",
   };
+
+  // state to store initial validation message
   const initialValidationMessage = {
     accountNumber: "",
     amount: "",
   };
+
+  // state to store form data
   const [formData, setFormData] = useState(initialFormData);
+
+  // state to store validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
+
+  // function to validate form
   const validateForm = () => {
     let flag = true;
+    // regex to validate account number
     const accountNumber = /^[789]{1}[0-9]{9}$/;
     if (!accountNumber.test(formData.accountNumber)) {
       setValidationMessage((prev) => ({
@@ -28,6 +38,7 @@ const CreditTransaction = () => {
         accountNumber: "",
       }));
     }
+    // regex to validate amount
     if (formData.amount <= 0) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -42,19 +53,29 @@ const CreditTransaction = () => {
     }
     return flag;
   };
+
+  // function to handle change in input fields
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // state to store response message
   const [responseMessage, setResponseMessage] = useState("");
+
+  // state to store error status
   const [isError, SetIsError] = useState(false);
+
+  // function to handle form submission
   const handleSubmit = () => {
     if (validateForm()) {
       axios
         .post(
           `http://localhost:8777/bank/credit?amount=${formData.amount}&accountNumber=${formData.accountNumber}`,
+          null,
           {
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("bankerToken")}`,
             },
           }
         )
@@ -65,11 +86,15 @@ const CreditTransaction = () => {
         })
         .catch((error) => {
           console.error("Error:", error);
-          setResponseMessage("Account not found");
+          if (error?.response?.data?.error)
+            setResponseMessage("You don't have permission to credit amount");
+          else setResponseMessage("Account not found");
           SetIsError(true);
         });
     }
   };
+
+  // return jsx for the component
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">

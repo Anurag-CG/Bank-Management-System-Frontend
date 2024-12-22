@@ -7,13 +7,27 @@ import CreditTransaction from "./CreditTransaction";
 import DebitTransaction from "./DebitTransaction";
 import BankerAddLogin from "./BankerAddLogin";
 import BankerDeleteLogin from "./BankerDeleteLogin";
+import { useNavigate } from "react-router-dom";
 
 const BankerHome = () => {
+  // navigate to different pages
+  const navigate = useNavigate();
+
+  // state to store the active service button
   const [activeServiceButton, setActiveServiceButton] = useState("");
+
+  // function to handle the click on the service button
   const handleServiceClick = (e) => {
     setActiveServiceButton(e.target.getAttribute("data-id"));
   };
 
+  // function to handle the logout
+  const handleLogout = () => {
+    localStorage.setItem("bankerToken", "");
+    navigate("/");
+  };
+
+  // return the JSX for the component
   return (
     <div className="bg-slate-500 min-h-[100vh] ">
       <div className="text-black flex flex-col font-basker justify-start items-center py-2 px-1">
@@ -121,6 +135,15 @@ const BankerHome = () => {
         ) : (
           <> </>
         )}
+        <button
+          className="text-black fixed  right-10 bottom-10"
+          onClick={handleLogout}
+        >
+          <img
+            className="w-10 rounded-full border-black border"
+            src="https://t4.ftcdn.net/jpg/05/80/99/99/360_F_580999947_8TiLCA1GVKXsGE8nQk0R7xzuHasBdBOU.jpg"
+          ></img>
+        </button>
       </div>
     </div>
   );

@@ -2,24 +2,36 @@ import { useState } from "react";
 import axios from "axios";
 
 const BankerDelete = () => {
+  // Initial data and validation message
   const initialData = {
     accountNumber: "",
     aadharNumber: "",
   };
+
+  // Initial data and validation message
   const initialValidationMessage = {
     accountNumber: "",
     aadharNumber: "",
   };
+
+  // State to store form data
   const [formData, setFormData] = useState(initialData);
+
+  // State to store validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
 
+  // Function to handle change in input fields
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // Function to validate form
   const validateForm = (formData) => {
     let flag = true;
+
+    // Validation for account number
     const aadharRegex = /^[0-9]{12}$/;
     if (!aadharRegex.test(formData.aadharNumber)) {
       setValidationMessage((prev) => ({
@@ -33,6 +45,8 @@ const BankerDelete = () => {
         aadharNumber: "",
       }));
     }
+
+    // Validation for account number
     const accountNumber = /^[789]{1}[0-9]{9}$/;
     if (!accountNumber.test(formData.accountNumber)) {
       setValidationMessage((prev) => ({
@@ -48,8 +62,14 @@ const BankerDelete = () => {
     }
     return flag;
   };
+
+  // State to store response message
   const [responseMessage, setResponseMessage] = useState("");
+
+  // State to store error
   const [isError, SetIsError] = useState(false);
+
+  // Function to handle form submission
   const handleSubmit = () => {
     if (validateForm(formData)) {
       console.log(formData);
@@ -59,6 +79,7 @@ const BankerDelete = () => {
           {
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("bankerToken")}`,
             },
           }
         )
@@ -69,11 +90,15 @@ const BankerDelete = () => {
         })
         .catch((error) => {
           console.error("Error:", error);
-          setResponseMessage("User not found");
+          if (error?.response?.data?.error)
+            setResponseMessage("You don't have permission to delete user");
+          else setResponseMessage("User not found");
           SetIsError(true);
         });
     }
   };
+
+  // return banker delete component
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">

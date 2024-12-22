@@ -2,25 +2,35 @@ import { useState } from "react";
 import axios from "axios";
 
 const BankerAddLogin = () => {
+  // Initial form data and validation message
   const initialFormData = {
     accountNumber: "",
     userId: "",
     password: "",
   };
+  // Initial form data and validation message
   const initialValidationMessage = {
     accountNumber: "",
     userId: "",
     password: "",
   };
+  // State to store form data
   const [formData, setFormData] = useState(initialFormData);
+
+  // State to store validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
+
+  // Function to handle change in form input
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // Function to validate form
   const validateForm = () => {
     let flag = true;
+    // regex for accountNumber
     const accountNumber = /^[789]{1}[0-9]{9}$/;
     if (!accountNumber.test(formData.accountNumber)) {
       setValidationMessage((prev) => ({
@@ -35,6 +45,7 @@ const BankerAddLogin = () => {
       }));
     }
 
+    // regex for userId
     const userId = /^[A-Za-z]{1,}[A-Za-z\d]{4,}$/;
     if (!userId.test(formData.userId)) {
       setValidationMessage((prev) => ({
@@ -50,6 +61,7 @@ const BankerAddLogin = () => {
       }));
     }
 
+    // regex for password
     const password =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     if (!password.test(formData.password)) {
@@ -67,8 +79,13 @@ const BankerAddLogin = () => {
     }
     return flag;
   };
+  // State to store response message
   const [responseMessage, setResponseMessage] = useState("");
+
+  // State to store error status
   const [isError, SetIsError] = useState(false);
+
+  // Function to handle form submission
   const handleSubmit = () => {
     if (validateForm()) {
       axios
@@ -78,6 +95,7 @@ const BankerAddLogin = () => {
           {
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("bankerToken")}`,
             },
           }
         )
@@ -89,12 +107,15 @@ const BankerAddLogin = () => {
         .catch((error) => {
           console.log(error);
           console.error("Error:", error);
-          setResponseMessage(error.response.data);
+          if (error?.response?.data?.error)
+            setResponseMessage("You don't have permission to add login");
+          else setResponseMessage(error.response.data);
           SetIsError(true);
         });
     }
   };
 
+  // return banker add login component
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">

@@ -1,22 +1,40 @@
 import { useState } from "react";
 import axios from "axios";
+
 const AdminViewUser = () => {
+  // Initial state of the form data
   const initialFormData = {
     accountNumber: "",
   };
+
+  // Initial state of the validation message
   const initialValidationMessage = {
     accountNumber: "",
   };
+
+  // State to store the form data
   const [formData, setFormData] = useState(initialFormData);
+
+  // State to store the validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
+
+  // State to store the response message
   const [responseMessage, setResponseMessage] = useState("");
+
+  // State to store the response data
   const [responseData, setResponseData] = useState({});
+
+  // State to store the error status
   const [isError, SetIsError] = useState(false);
+
+  // Function to handle the change in the input fields
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // Function to validate the form
   const validateForm = () => {
     let flag = true;
     if (formData.accountNumber.length !== 10) {
@@ -33,6 +51,8 @@ const AdminViewUser = () => {
     }
     return flag;
   };
+
+  // Function to handle the form submission
   const handleSubmit = () => {
     if (validateForm()) {
       axios
@@ -58,6 +78,8 @@ const AdminViewUser = () => {
         });
     }
   };
+
+  // returning the admin view user component
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">

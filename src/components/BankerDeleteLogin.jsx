@@ -2,25 +2,36 @@ import { useState } from "react";
 import axios from "axios";
 
 const BankerDeleteLogin = () => {
+  // Initial form data and validation message
   const initialFormData = {
     accountNumber: "",
     userId: "",
   };
+
+  // Initial form data and validation message
   const initialValidationMessage = {
     accountNumber: "",
     userId: "",
   };
 
+  // State to store form data
   const [formData, setFormData] = useState(initialFormData);
+
+  // State to store validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
 
+  // Function to handle change in input fields
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // Function to validate form
   const validateForm = () => {
     let flag = true;
+
+    // Regular expression for account number
     const accountNumber = /^[789]{1}[0-9]{9}$/;
     if (!accountNumber.test(formData.accountNumber)) {
       setValidationMessage((prev) => ({
@@ -34,6 +45,8 @@ const BankerDeleteLogin = () => {
         accountNumber: "",
       }));
     }
+
+    // Regular expression for user ID
     const userId = /^[A-Za-z]{1,}[A-Za-z\d]{4,}$/;
     if (!userId.test(formData.userId)) {
       setValidationMessage((prev) => ({
@@ -51,8 +64,14 @@ const BankerDeleteLogin = () => {
 
     return flag;
   };
+
+  // State to store response message
   const [responseMessage, setResponseMessage] = useState("");
+
+  // State to store error status
   const [isError, SetIsError] = useState(false);
+
+  // Function to handle form submission
   const handleSubmit = () => {
     if (validateForm()) {
       axios
@@ -61,23 +80,30 @@ const BankerDeleteLogin = () => {
           {
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("bankerToken")}`,
             },
           }
         )
         .then((response) => {
           console.log("Response:", response.data);
           setResponseMessage(response.data);
+          setFormData(initialFormData);
           SetIsError(false);
         })
         .catch((error) => {
           console.log(error);
           console.error("Error:", error);
-          setResponseMessage(error.response.data);
+          if (error?.response?.data?.error)
+            setResponseMessage(
+              "You don't have permission to delete login user"
+            );
+          else setResponseMessage(error.response.data);
           SetIsError(true);
         });
     }
   };
 
+  // return bank delete login component
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">

@@ -1,12 +1,17 @@
 import { useState } from "react";
 import axios from "axios";
 const UpdateUser = () => {
+  // Initial Data
   const initialData = {
     accountNumber: "",
   };
+
+  // Initial Validation Message
   const initialValidationMessage = {
     accountNumber: "",
   };
+
+  // Initial Profile Data to Update
   const initialProfileDataToUpdate = {
     accountNumber: "",
     aadharNumber: "",
@@ -22,6 +27,8 @@ const UpdateUser = () => {
     state: "",
     pincode: "",
   };
+
+  // Indian States and UTs
   const indianStatesAndUTs = [
     "Andhra Pradesh",
     "Arunachal Pradesh",
@@ -61,20 +68,32 @@ const UpdateUser = () => {
     "Lakshadweep",
     "Daman and Diu",
   ];
+
+  // state for form data
   const [formData, setFormData] = useState(initialData);
+
+  // state for validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
+
+  // state for balance
   const [balance, setBalance] = useState(null);
+
+  // state for profile data to update
   const [profileDataToUpdate, setProfileDataToUpdate] = useState(
     initialProfileDataToUpdate
   );
 
+  // handle change function
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // validate form function
   const validateForm = (formData) => {
     let flag = true;
+    // Account Number Validation
     const accountNumber = /^[789]{1}[0-9]{9}$/;
     if (!accountNumber.test(formData.accountNumber)) {
       setValidationMessage((prev) => ({
@@ -90,14 +109,18 @@ const UpdateUser = () => {
     }
     return flag;
   };
+
+  // handle submit check balance function
   const handleSubmitCheckBalance = () => {
     if (validateForm(formData)) {
+      // axios get request
       axios
         .get(
           `http://localhost:8777/bank/viewBalance?accountNumber=${formData.accountNumber}`,
           {
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("bankerToken")}`,
             },
           }
         )
@@ -113,14 +136,18 @@ const UpdateUser = () => {
       setProfileDataToUpdate(initialProfileDataToUpdate);
     }
   };
+
+  // handle change update profile function
   const handleSubmitUpdateProfile = () => {
     if (validateForm(formData)) {
+      // axios get request
       axios
         .get(
           `http://localhost:8777/bank/findUser?accountNumber=${formData.accountNumber}`,
           {
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("bankerToken")}`,
             },
           }
         )
@@ -137,6 +164,7 @@ const UpdateUser = () => {
     setBalance(null);
   };
 
+  // handle change update profile function
   const handleChangeUpdateProfile = (e) => {
     // console.log(profileDataToUpdate, initialProfileDataToUpdate);
     setProfileDataToUpdate((prev) => ({
@@ -144,11 +172,15 @@ const UpdateUser = () => {
       [e.target.name]: e.target.value,
     }));
   };
+
+  // check if any data is changed
   const checkInitialProfileDataChanged = () => {
     for (let key in profileDataToUpdate) {
       if (profileDataToUpdate[key]) return true;
     }
   };
+
+  // validate profile data to update
   const validateProfileDataToUpdate = (profileDataToUpdate) => {
     let flag = true;
     // const aadharRegex = /^[0-9]{12}$/;
@@ -165,6 +197,7 @@ const UpdateUser = () => {
     //   }));
     // }
 
+    // PAN Number Validation
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
     if (!panRegex.test(profileDataToUpdate.panNumber)) {
       setValidationMessage((prev) => ({
@@ -179,6 +212,7 @@ const UpdateUser = () => {
       }));
     }
 
+    // First Name Validation
     const firstNameRegex = /^[a-zA-Z]{1,25}$/;
     if (!firstNameRegex.test(profileDataToUpdate.firstName)) {
       setValidationMessage((prev) => ({
@@ -193,6 +227,7 @@ const UpdateUser = () => {
       }));
     }
 
+    // Last Name Validation
     const lastNameRegex = /^[a-zA-Z]{1,25}$/;
     if (!lastNameRegex.test(profileDataToUpdate.lastName)) {
       setValidationMessage((prev) => ({
@@ -207,6 +242,7 @@ const UpdateUser = () => {
       }));
     }
 
+    // Father Name Validation
     const fnameRegex = /^[A-Za-z ]{1,50}$/;
     if (!fnameRegex.test(profileDataToUpdate.fname)) {
       setValidationMessage((prev) => ({
@@ -221,6 +257,7 @@ const UpdateUser = () => {
       }));
     }
 
+    // Mother Name Validation
     if (!fnameRegex.test(profileDataToUpdate.mname)) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -234,6 +271,7 @@ const UpdateUser = () => {
       }));
     }
 
+    // Date of Birth Validation
     const calculateAge = (dob) => {
       const birthDate = new Date(dob);
       const currentDate = new Date();
@@ -244,7 +282,6 @@ const UpdateUser = () => {
       }
       return age;
     };
-
     let age = calculateAge(profileDataToUpdate.dateOfBirth);
     if (!profileDataToUpdate.dateOfBirth) {
       setValidationMessage((prev) => ({
@@ -265,6 +302,7 @@ const UpdateUser = () => {
       }));
     }
 
+    // City Validation
     const cityRegex = /^[a-zA-Z]{1,25}$/;
     if (!cityRegex.test(profileDataToUpdate.city)) {
       setValidationMessage((prev) => ({
@@ -279,6 +317,7 @@ const UpdateUser = () => {
       }));
     }
 
+    // Pincode Validation
     const pincodeRegex = /^[0-9]{6}$/;
     if (!pincodeRegex.test(profileDataToUpdate.pincode)) {
       setValidationMessage((prev) => ({
@@ -293,6 +332,7 @@ const UpdateUser = () => {
       }));
     }
 
+    // Qualification Validation
     if (!profileDataToUpdate.qualification) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -306,6 +346,7 @@ const UpdateUser = () => {
       }));
     }
 
+    // State Validation
     if (!profileDataToUpdate.state) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -318,6 +359,8 @@ const UpdateUser = () => {
         state: "",
       }));
     }
+
+    // Address Validation
     if (!profileDataToUpdate.address) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -332,14 +375,22 @@ const UpdateUser = () => {
     }
     return flag;
   };
+
+  // Response Message
   const [responseMessage, setResponseMessage] = useState("");
+
+  // Error State
   const [isError, setIsError] = useState(false);
+
+  // Handle Submit Update Profile Final
   const handleSubmitUpdateProfileFinal = () => {
     if (validateProfileDataToUpdate(profileDataToUpdate))
+      // axios put request
       axios
         .put("http://localhost:8777/bank/updateUser", profileDataToUpdate, {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("bankerToken")}`,
           },
         })
         .then((response) => {
@@ -354,6 +405,8 @@ const UpdateUser = () => {
           setIsError(true);
         });
   };
+
+  // return component for UpdateUser
   return (
     <>
       <div className="flex flex-col w-[50%]">

@@ -1,26 +1,38 @@
 import { useState } from "react";
 import axios from "axios";
 const FundTransfer = () => {
+  // Initial form data
   const initialFormData = {
     senderAccount: "",
     receiverAccount: "",
     balance: "",
   };
+
+  // Initial validation message
   const initialValidationMessage = {
     senderAccount: "",
     receiverAccount: "",
     balance: "",
   };
+
+  // state to store form data
   const [formData, setFormData] = useState(initialFormData);
+
+  // state to store validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
+
+  // function to handle change in input fields
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // function to validate form
   const validateForm = () => {
-    console.log("Hi");
     let flag = true;
+
+    // Regular expression for account number
     const accountNumber = /^[789]{1}[0-9]{9}$/;
     if (!accountNumber.test(formData.receiverAccount)) {
       setValidationMessage((prev) => ({
@@ -34,6 +46,7 @@ const FundTransfer = () => {
         receiverAccount: "",
       }));
     }
+    // validate sender account number
     if (!accountNumber.test(formData.senderAccount)) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -46,6 +59,7 @@ const FundTransfer = () => {
         senderAccount: "",
       }));
     }
+    // validate balance
     if (formData.balance <= 0) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -60,18 +74,27 @@ const FundTransfer = () => {
     }
     return flag;
   };
+
+  // state to store response message
   const [responseMessage, setResponseMessage] = useState("");
+
+  // state to store error
   const [isError, SetIsError] = useState(false);
+
+  // function to handle form submission
   const handleSubmit = () => {
     if (validateForm()) {
+      // API call to transfer funds
       axios
         .post(`http://localhost:8777/bank/fundtransfer`, formData, {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("bankerToken")}`,
           },
         })
         .then((response) => {
           console.log("Response:", response.data);
+          setFormData(initialFormData);
           setResponseMessage(
             `Rs. ${formData.balance} Amount Transferred successfully`
           );
@@ -79,12 +102,15 @@ const FundTransfer = () => {
         })
         .catch((error) => {
           console.error("Error:", error);
-          setResponseMessage(error.response.data);
+          if (error?.response?.data?.error)
+            setResponseMessage("You don't have permission to transfer funds");
+          else setResponseMessage(error.response.data);
           SetIsError(true);
         });
     }
   };
 
+  // return the jsx component
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">

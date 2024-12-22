@@ -1,36 +1,67 @@
 import { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  // Initial form data
   const initialFormData = {
     userId: "",
     password: "",
   };
 
+  // navigate to different page
+  const navigate = useNavigate();
+
+  // State to store form data
   const [formData, setFormData] = useState(initialFormData);
 
+  // Function to handle form data change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
-    console.log(formData);
-    axios
-      .post("http://localhost:8777/login/user", formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        console.log("Response:", response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        console.error("Error:", error);
-      });
+  // State to store response message
+  const [responseMessage, setResponseMessage] = useState("");
+
+  // State to store error status
+  const [isError, SetIsError] = useState(false);
+
+  // Function to validate form
+  const validateForm = () => {
+    if (formData.userId === "" || formData.password === "") {
+      alert("Please fill all the fields");
+      return false;
+    }
+    return true;
   };
 
+  // Function to handle form submission
+  const handleSubmit = () => {
+    console.log(formData);
+    if (validateForm()) {
+      // Make a POST request to the server
+      axios
+        .post("http://localhost:8777/login/user", formData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((response) => {
+          console.log("Response:", response.data);
+          localStorage.setItem("userToken", response.data);
+          navigate("/root");
+          SetIsError(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          console.error("Error:", error);
+          setResponseMessage("Invalid Credentials");
+          SetIsError(true);
+        });
+    }
+  };
+
+  // return the jsx component for rendering
   return (
     <>
       <div
@@ -77,6 +108,13 @@ const Login = () => {
             >
               Register Yourself
             </Link>
+            <div
+              className={`text-center mt-3 ${
+                isError ? "text-red-600" : "text-green-600"
+              } `}
+            >
+              {responseMessage}
+            </div>
           </form>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 
 const AdminAdd = () => {
+  // initial formData to store the form data
   const initialFormData = {
     bankerName: "",
     password: "",
@@ -11,12 +12,21 @@ const AdminAdd = () => {
     password: "",
   };
 
+  // formData to store the form data
   const [formData, setFormData] = useState(initialFormData);
+
+  // validationMessage to store the validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
+
+  // responseMessage to store the response message from the server
   const [responseMessage, setResponseMessage] = useState("");
+
+  // isError to store the error status
   const [isError, SetIsError] = useState(false);
+
+  // validateForm function to validate the form data
   const validateForm = (formData) => {
     let flag = true;
     console.log(formData);
@@ -51,9 +61,13 @@ const AdminAdd = () => {
 
     return flag;
   };
+
+  // handleChange function to handle the change in the input fields
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // handleSubmit function to handle the form submission
   const handleSubmit = () => {
     if (validateForm(formData)) {
       axios
@@ -65,15 +79,19 @@ const AdminAdd = () => {
         })
         .then((response) => {
           console.log(response.data);
+          setResponseMessage("");
           alert(response.data);
+          SetIsError(false);
         })
         .catch((error) => {
           console.log(error);
           setResponseMessage("Error");
+          SetIsError(true);
         });
     }
   };
 
+  // return the form
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">
@@ -100,7 +118,7 @@ const AdminAdd = () => {
             name="password"
             onChange={handleChange}
             value={formData.password}
-            type="text"
+            type="password"
             required
           ></input>
         </div>

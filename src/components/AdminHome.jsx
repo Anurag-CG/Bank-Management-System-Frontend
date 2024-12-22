@@ -1,14 +1,28 @@
-import { act, useState } from "react";
+import { useState } from "react";
 import AdminAdd from "./AdminAdd";
 import AdminRemove from "./AdminRemove";
 import AdminViewBanker from "./AdminViewBanker";
 import AdminViewUser from "./AdminViewUser";
-
+import { useNavigate } from "react-router-dom";
 const AdminHome = () => {
+  // initial formData to store the form data
   const [activeServiceButton, setActiveServiceButton] = useState(null);
+
+  // handleServiceClick function to handle the click on the service button
   const handleServiceClick = (e) => {
     setActiveServiceButton(e.target.getAttribute("data-id"));
   };
+
+  // navigate to the login page
+  const navigate = useNavigate();
+
+  // handleLogout function to handle the logout
+  const handleLogout = () => {
+    localStorage.setItem("adminToken", "");
+    navigate("/");
+  };
+
+  // return the admin home page
   return (
     <>
       <div className="bg-slate-500 min-h-[100vh] ">
@@ -72,6 +86,15 @@ const AdminHome = () => {
             <></>
           )}
         </div>
+        <button
+          className="text-black fixed right-10 bottom-10"
+          onClick={handleLogout}
+        >
+          <img
+            className="w-10 rounded-full border-black border"
+            src="https://t4.ftcdn.net/jpg/05/80/99/99/360_F_580999947_8TiLCA1GVKXsGE8nQk0R7xzuHasBdBOU.jpg"
+          ></img>
+        </button>
       </div>
     </>
   );

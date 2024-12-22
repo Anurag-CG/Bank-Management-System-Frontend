@@ -1,23 +1,42 @@
 import { useState } from "react";
 import axios from "axios";
 const AdminViewBanker = () => {
+  // Initial form data
   const initialFormData = {
     bankerId: "",
   };
+
+  // Initial validation message
   const initialValidationMessage = {
     bankerId: "",
   };
+
+  // form data state
   const [formData, setFormData] = useState(initialFormData);
+
+  // validation message state
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
+
+  // response message state
   const [responseMessage, setResponseMessage] = useState("");
+
+  // name state
   const [name, setName] = useState("");
+
+  // id state
   const [id, setId] = useState("");
+
+  // isError state
   const [isError, SetIsError] = useState(false);
+
+  // Function to handle change in input fields
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // Function to validate form
   const validateForm = () => {
     let flag = true;
     if (formData.bankerId.length !== 9) {
@@ -34,6 +53,8 @@ const AdminViewBanker = () => {
     }
     return flag;
   };
+
+  // Function to handle form submission
   const handleSubmit = () => {
     if (validateForm()) {
       axios
@@ -61,6 +82,8 @@ const AdminViewBanker = () => {
         });
     }
   };
+
+  // returning the admin view banker component
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">

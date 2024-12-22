@@ -16,6 +16,7 @@ import AdminLogin from "./components/AdminLogin";
 import AdminHome from "./components/AdminHome";
 
 function App() {
+  // Main App component for routing
   return (
     <>
       <BrowserRouter>

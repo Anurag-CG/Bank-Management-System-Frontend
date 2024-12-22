@@ -3,6 +3,7 @@ import loginBg from "../assets/loginBg.jpg";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const OpenAccount = () => {
+  // initialFormData object to store the form data
   const initialFormData = {
     aadharNumber: "",
     panNumber: "",
@@ -18,6 +19,7 @@ const OpenAccount = () => {
     pincode: "",
   };
 
+  // initialValidationMessage object to store the validation messages
   const initialValidationMessage = {
     aadharNumber: "",
     panNumber: "",
@@ -33,6 +35,7 @@ const OpenAccount = () => {
     pincode: "",
   };
 
+  // indianStatesAndUTs array to store the list of Indian states and Union Territories
   const indianStatesAndUTs = [
     "Andhra Pradesh",
     "Arunachal Pradesh",
@@ -73,17 +76,23 @@ const OpenAccount = () => {
     "Daman and Diu",
   ];
 
+  // formData state to store the form data
   const [formData, setFormData] = useState(initialFormData);
+
+  // handleChange function to handle the form input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // validationMessage state to store the validation messages
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
 
+  // validateForm function to validate the form data
   const validateForm = (formData) => {
     let flag = true;
+    // Regular expressions for validation
     const aadharRegex = /^[0-9]{12}$/;
     if (!aadharRegex.test(formData.aadharNumber)) {
       setValidationMessage((prev) => ({
@@ -97,7 +106,7 @@ const OpenAccount = () => {
         aadharNumber: "",
       }));
     }
-
+    // Regular expressions for validation
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
     if (!panRegex.test(formData.panNumber)) {
       setValidationMessage((prev) => ({
@@ -111,7 +120,7 @@ const OpenAccount = () => {
         panNumber: "",
       }));
     }
-
+    // Regular expressions for validation
     const firstNameRegex = /^[a-zA-Z]{1,25}$/;
     if (!firstNameRegex.test(formData.firstName)) {
       setValidationMessage((prev) => ({
@@ -126,6 +135,7 @@ const OpenAccount = () => {
       }));
     }
 
+    // Regular expressions for validation
     const lastNameRegex = /^[a-zA-Z]{1,25}$/;
     if (!lastNameRegex.test(formData.lastName)) {
       setValidationMessage((prev) => ({
@@ -140,6 +150,7 @@ const OpenAccount = () => {
       }));
     }
 
+    // Regular expressions for validation
     const fnameRegex = /^[A-Za-z ]{1,50}$/;
     if (!fnameRegex.test(formData.fname)) {
       setValidationMessage((prev) => ({
@@ -154,6 +165,7 @@ const OpenAccount = () => {
       }));
     }
 
+    // Regular expressions for validation
     if (!fnameRegex.test(formData.mname)) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -167,6 +179,7 @@ const OpenAccount = () => {
       }));
     }
 
+    // Regular expressions for validation
     const calculateAge = (dob) => {
       const birthDate = new Date(dob);
       const currentDate = new Date();
@@ -178,6 +191,7 @@ const OpenAccount = () => {
       return age;
     };
 
+    //validation for date of birth
     let age = calculateAge(formData.dateOfBirth);
     if (!formData.dateOfBirth) {
       setValidationMessage((prev) => ({
@@ -198,6 +212,7 @@ const OpenAccount = () => {
       }));
     }
 
+    // Regular expressions for validation
     const cityRegex = /^[a-zA-Z]{1,25}$/;
     if (!cityRegex.test(formData.city)) {
       setValidationMessage((prev) => ({
@@ -212,6 +227,7 @@ const OpenAccount = () => {
       }));
     }
 
+    // Regular expressions for validation
     const pincodeRegex = /^[0-9]{6}$/;
     if (!pincodeRegex.test(formData.pincode)) {
       setValidationMessage((prev) => ({
@@ -226,6 +242,7 @@ const OpenAccount = () => {
       }));
     }
 
+    //validation for qualification
     if (!formData.qualification) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -239,6 +256,7 @@ const OpenAccount = () => {
       }));
     }
 
+    //validation for state
     if (!formData.state) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -265,11 +283,20 @@ const OpenAccount = () => {
     }
     return flag;
   };
+
+  // responseMessage state to store the response message
   const [responseMessage, setResponseMessage] = useState("");
+
+  // isError state to store the error status
   const [isError, SetIsError] = useState(false);
+
+  // navigate function to navigate to the specified path
   const navigate = useNavigate();
+
+  // handleSubmit function to handle the form submission
   const handleSubmit = () => {
     if (validateForm(formData)) {
+      // API call to add user
       axios
         .post(`http://localhost:8777/user/addUser`, formData, {
           headers: {
@@ -292,6 +319,7 @@ const OpenAccount = () => {
     // console.log(formData);
   };
 
+  // return jsx component
   return (
     <>
       <form className="flex justify-center items-center flex-col">

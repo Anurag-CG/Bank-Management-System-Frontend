@@ -1,24 +1,34 @@
 import axios from "axios";
 import { useState } from "react";
 const UpdatePassword = () => {
+  // Initial form data
   const initialFormData = {
     userId: "",
     previousPassword: "",
     newPassword: "",
   };
+
+  // Initial validation message
   const initialValidationMessage = {
     userId: "",
     previousPassword: "",
     newPassword: "",
   };
+
+  // State to hold form data
   const [formData, setFormData] = useState(initialFormData);
+
+  // State to hold validation messages
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
 
+  // Function to validate form
   const validateForm = () => {
     let flag = true;
+    // Regular expression for user id
     const userId = /^[A-Za-z]{1,}[A-Za-z\d]{4,}$/;
+    // Check if user id is valid
     if (!userId.test(formData.userId)) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -33,8 +43,11 @@ const UpdatePassword = () => {
       }));
     }
 
+    // Regular expression for password
     const password =
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+    // Check if previous password is valid
     if (!password.test(formData.previousPassword)) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -48,6 +61,7 @@ const UpdatePassword = () => {
         previousPassword: "",
       }));
     }
+    // Check if new password is valid
     if (!password.test(formData.newPassword)) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -64,16 +78,25 @@ const UpdatePassword = () => {
     return flag;
   };
 
+  // Function to handle form data change
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // State to hold response message
   const [responseMessage, setResponseMessage] = useState("");
+
+  // State to hold error status
   const [isError, SetIsError] = useState(false);
+
+  // Function to handle form submission
   const handleSubmit = () => {
     if (validateForm()) {
+      // Make a PUT request to update password
       axios
         .put("http://localhost:8777/user/updatePassword", formData, {
           headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
             "Content-Type": "application/json",
           },
         })
@@ -89,6 +112,8 @@ const UpdatePassword = () => {
         });
     }
   };
+
+  // return the jsx component for rendering
   return (
     <div className="flex justify-center items-center min-h-[100vh]">
       <form className="bg-slate-300 rounded-tr-3xl rounded-bl-3xl w-[50%] p-6 my-8 flex flex-col gap-2">

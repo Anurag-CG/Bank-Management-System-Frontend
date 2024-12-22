@@ -2,20 +2,33 @@ import { useState } from "react";
 import axios from "axios";
 
 const AdminRemove = () => {
+  // Initial form data
   const initialFormData = {
     bankerId: "",
     bankerName: "",
   };
+
+  // Initial validation message
   const initialValidationMessage = {
     bankerId: "",
     bankerName: "",
   };
+
+  // form data state
   const [formData, setFormData] = useState(initialFormData);
+
+  // validation message state
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
+
+  // response message state
   const [responseMessage, setResponseMessage] = useState("");
+
+  // isError state
   const [isError, SetIsError] = useState(false);
+
+  // Function to validate form
   const validateForm = (formData) => {
     let flag = true;
     console.log(formData);
@@ -46,9 +59,13 @@ const AdminRemove = () => {
     }
     return flag;
   };
+
+  // Function to handle change in input fields
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  // Function to handle form submission
   const handleSubmit = () => {
     if (validateForm(formData)) {
       console.log(localStorage.getItem("adminToken"));
@@ -75,6 +92,7 @@ const AdminRemove = () => {
     }
   };
 
+  // return admin remove component
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">

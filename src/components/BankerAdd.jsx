@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 const BankerAdd = () => {
+  // Initial form data
   const initialFormData = {
     aadharNumber: "",
     panNumber: "",
@@ -16,6 +17,7 @@ const BankerAdd = () => {
     pincode: "",
   };
 
+  // Initial validation message
   const initialValidationMessage = {
     aadharNumber: "",
     panNumber: "",
@@ -31,6 +33,7 @@ const BankerAdd = () => {
     pincode: "",
   };
 
+  // Indian states and UTs
   const indianStatesAndUTs = [
     "Andhra Pradesh",
     "Arunachal Pradesh",
@@ -71,17 +74,24 @@ const BankerAdd = () => {
     "Daman and Diu",
   ];
 
+  // Form data and validation message
   const [formData, setFormData] = useState(initialFormData);
+
+  // Handle change in form data
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Validation message
   const [validationMessage, setValidationMessage] = useState(
     initialValidationMessage
   );
 
+  // Validate form data using regex
   const validateForm = (formData) => {
     let flag = true;
+
+    // Regex for Aadhar Number
     const aadharRegex = /^[0-9]{12}$/;
     if (!aadharRegex.test(formData.aadharNumber)) {
       setValidationMessage((prev) => ({
@@ -96,6 +106,7 @@ const BankerAdd = () => {
       }));
     }
 
+    // Regex for Pan Number
     const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
     if (!panRegex.test(formData.panNumber)) {
       setValidationMessage((prev) => ({
@@ -110,6 +121,7 @@ const BankerAdd = () => {
       }));
     }
 
+    // Regex for First Name
     const firstNameRegex = /^[a-zA-Z]{1,25}$/;
     if (!firstNameRegex.test(formData.firstName)) {
       setValidationMessage((prev) => ({
@@ -124,6 +136,7 @@ const BankerAdd = () => {
       }));
     }
 
+    // Regex for Last Name
     const lastNameRegex = /^[a-zA-Z]{1,25}$/;
     if (!lastNameRegex.test(formData.lastName)) {
       setValidationMessage((prev) => ({
@@ -138,6 +151,7 @@ const BankerAdd = () => {
       }));
     }
 
+    // Regex for Father Name
     const fnameRegex = /^[A-Za-z ]{1,50}$/;
     if (!fnameRegex.test(formData.fname)) {
       setValidationMessage((prev) => ({
@@ -152,6 +166,7 @@ const BankerAdd = () => {
       }));
     }
 
+    // Regex for Mother Name
     if (!fnameRegex.test(formData.mname)) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -165,6 +180,7 @@ const BankerAdd = () => {
       }));
     }
 
+    // Calculate age from date of birth
     const calculateAge = (dob) => {
       const birthDate = new Date(dob);
       const currentDate = new Date();
@@ -177,6 +193,8 @@ const BankerAdd = () => {
     };
 
     let age = calculateAge(formData.dateOfBirth);
+
+    // Validation for Date of Birth
     if (!formData.dateOfBirth) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -196,6 +214,7 @@ const BankerAdd = () => {
       }));
     }
 
+    // Regex for City
     const cityRegex = /^[a-zA-Z]{1,25}$/;
     if (!cityRegex.test(formData.city)) {
       setValidationMessage((prev) => ({
@@ -210,6 +229,7 @@ const BankerAdd = () => {
       }));
     }
 
+    // regex for pincode
     const pincodeRegex = /^[0-9]{6}$/;
     if (!pincodeRegex.test(formData.pincode)) {
       setValidationMessage((prev) => ({
@@ -224,6 +244,7 @@ const BankerAdd = () => {
       }));
     }
 
+    // Validation for qualification
     if (!formData.qualification) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -237,6 +258,7 @@ const BankerAdd = () => {
       }));
     }
 
+    // Validation for state
     if (!formData.state) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -249,6 +271,8 @@ const BankerAdd = () => {
         state: "",
       }));
     }
+
+    // Validation for address
     if (!formData.address) {
       setValidationMessage((prev) => ({
         ...prev,
@@ -263,8 +287,14 @@ const BankerAdd = () => {
     }
     return flag;
   };
+
+  // Response message and error
   const [responseMessage, setResponseMessage] = useState("");
+
+  // isError state for error message
   const [isError, SetIsError] = useState(false);
+
+  // Handle submit for form
   const handleSubmit = () => {
     console.log(formData);
     if (validateForm(formData)) {
@@ -272,6 +302,7 @@ const BankerAdd = () => {
         .post("http://localhost:8777/bank/addUser", formData, {
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("bankerToken"),
           },
         })
         .then((response) => {
@@ -282,13 +313,14 @@ const BankerAdd = () => {
         .catch((error) => {
           console.error("Error:", error);
           if (error?.response?.data?.error)
-            setResponseMessage(error.response.data.error);
+            setResponseMessage("You don't have permission to add user");
           else setResponseMessage(error.response.data);
           SetIsError(true);
         });
     }
   };
 
+  // returning the bank add component
   return (
     <>
       <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">
