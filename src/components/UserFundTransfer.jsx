@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+
 const UserFundTransfer = () => {
   // Initial form data
   const initialFormData = {
@@ -48,18 +50,18 @@ const UserFundTransfer = () => {
     }
 
     // validate sender's account number
-    if (!accountNumber.test(formData.senderAccount)) {
-      setValidationMessage((prev) => ({
-        ...prev,
-        senderAccount: "Please enter valid sender's Account Number",
-      }));
-      flag = false;
-    } else {
-      setValidationMessage((prev) => ({
-        ...prev,
-        senderAccount: "",
-      }));
-    }
+    // if (!accountNumber.test(formData.senderAccount)) {
+    //   setValidationMessage((prev) => ({
+    //     ...prev,
+    //     senderAccount: "Please enter valid sender's Account Number",
+    //   }));
+    //   flag = false;
+    // } else {
+    //   setValidationMessage((prev) => ({
+    //     ...prev,
+    //     senderAccount: "",
+    //   }));
+    // }
 
     // validate balance
     if (formData.balance <= 0) {
@@ -83,24 +85,49 @@ const UserFundTransfer = () => {
   const handleSubmit = () => {
     if (validateForm()) {
       // API call to transfer fund
+
+      const decoded = jwtDecode(localStorage.getItem("userToken"));
+      console.log(decoded.sub);
       axios
-        .post(`http://localhost:8777/user/fund_transfer`, formData, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        .post(
+          `http://localhost:8777/user/findUser`,
+          {
+            userId: decoded.sub,
           },
-        })
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+            },
+          }
+        )
         .then((response) => {
-          console.log("Response:", response.data);
-          setResponseMessage(
-            `Rs. ${formData.balance} Amount Transferred successfully`
-          );
-          SetIsError(false);
+          const updatedFormData = {
+            ...formData,
+            senderAccount: response.data.accountNumber,
+          };
+          axios
+            .post(`http://localhost:8777/user/fund_transfer`, updatedFormData, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+              },
+            })
+            .then((response) => {
+              console.log("Response:", response.data);
+              setResponseMessage(
+                `Rs. ${formData.balance} Amount Transferred successfully`
+              );
+              SetIsError(false);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              setResponseMessage(error.response.data);
+              SetIsError(true);
+            });
         })
         .catch((error) => {
-          console.error("Error:", error);
-          setResponseMessage(error.response.data);
-          SetIsError(true);
+          console.log(error);
         });
     }
   };
@@ -110,7 +137,7 @@ const UserFundTransfer = () => {
     <>
       <div className="flex justify-center items-center min-h-[100vh] font-futura">
         <form className="bg-slate-300 rounded-tr-3xl rounded-bl-3xl w-[50%] p-6 my-8 flex flex-col gap-2">
-          <div className="flex">
+          {/* <div className="flex">
             <label className="w-1/3">Sender's Account Number</label>
             <input
               className="w-2/3"
@@ -120,7 +147,7 @@ const UserFundTransfer = () => {
               type="text"
               required
             ></input>
-          </div>
+          </div> */}
           <div className="text-red-600 text-xs font-play-fair font-bold">
             {validationMessage.senderAccount}
           </div>
