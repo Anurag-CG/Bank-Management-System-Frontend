@@ -409,8 +409,8 @@ const UpdateUser = () => {
   // return component for UpdateUser
   return (
     <>
-      <div className="flex flex-col w-[50%]">
-        <form className="bg-slate-300 rounded w-[100%] p-2 my-8 flex flex-col gap-2">
+      <div className="flex flex-col w-[50%] m-auto">
+        <form className="bg-slate-300 rounded w-[100%] p-2 flex flex-col gap-2">
           <div className="flex">
             <label className="w-1/3">Account Number</label>
             <input

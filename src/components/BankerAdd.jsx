@@ -323,7 +323,7 @@ const BankerAdd = () => {
   // returning the bank add component
   return (
     <>
-      <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">
+      <form className="bg-slate-300 rounded w-[50%] m-auto p-2 my-8 flex flex-col gap-2">
         {/* ----------------AadharInput---------------- */}
         <div className="flex">
           <label className="w-1/3">Aadhar Number</label>

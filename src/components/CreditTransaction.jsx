@@ -97,7 +97,7 @@ const CreditTransaction = () => {
   // return jsx for the component
   return (
     <>
-      <form className="bg-slate-300 rounded w-[50%] p-2 my-8 flex flex-col gap-2">
+      <form className="bg-slate-300 rounded w-[50%] p-2 m-auto flex flex-col gap-2">
         <div className="flex">
           <label className="w-1/3">Account Number</label>
           <input
