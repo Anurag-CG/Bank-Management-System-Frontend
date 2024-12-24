@@ -25,15 +25,16 @@ const AdminHome = () => {
   // return the admin home page
   return (
     <>
-      <div className="bg-slate-500 min-h-[100vh] ">
+      <div className="bg-blue-500 min-h-[100vh] ">
         <div className="text-black flex flex-col font-basker justify-start items-center py-2 px-1">
+          <h1 className="text-3xl">Welcome Admin</h1>
           <div className="flex w-[90%]">
             <div
               data-id="add"
               className={`p-2 ${
                 activeServiceButton == "add"
-                  ? "bg-slate-50 border-d-0 border-t-2 border-x-2"
-                  : "bg-slate-300 border-2"
+                  ? "bg-blue-300 border-d-0 border-t-2 border-x-2"
+                  : "bg-white border-2"
               }  flex-1 rounded-t border-black text-center hover:cursor-pointer`}
               onClick={handleServiceClick}
             >
@@ -44,8 +45,8 @@ const AdminHome = () => {
               data-id="remove"
               className={`p-2 ${
                 activeServiceButton == "remove"
-                  ? "bg-slate-50 border-d-0 border-t-2 border-x-2"
-                  : "bg-slate-300 border-2"
+                  ? "bg-blue-300 border-d-0 border-t-2 border-x-2"
+                  : "bg-white border-2"
               }  flex-1 rounded-t border-black text-center hover:cursor-pointer`}
               onClick={handleServiceClick}
             >
@@ -56,8 +57,8 @@ const AdminHome = () => {
               data-id="viewBanker"
               className={`p-2 ${
                 activeServiceButton == "viewBanker"
-                  ? "bg-slate-50 border-d-0 border-t-2 border-x-2"
-                  : "bg-slate-300 border-2"
+                  ? "bg-blue-300 border-d-0 border-t-2 border-x-2"
+                  : "bg-white border-2"
               }  flex-1 rounded-t border-black text-center hover:cursor-pointer`}
               onClick={handleServiceClick}
             >
@@ -67,8 +68,8 @@ const AdminHome = () => {
               data-id="viewUser"
               className={`p-2 ${
                 activeServiceButton == "viewUser"
-                  ? "bg-slate-50 border-d-0 border-t-2 border-x-2"
-                  : "bg-slate-300 border-2"
+                  ? "bg-blue-300 border-d-0 border-t-2 border-x-2"
+                  : "bg-white border-2"
               }  flex-1 rounded-t border-black text-center hover:cursor-pointer`}
               onClick={handleServiceClick}
             >
@@ -76,7 +77,7 @@ const AdminHome = () => {
             </div>
           </div>
           {activeServiceButton ? (
-            <div className=" w-[90%] bg-slate-50 rounded-t-none rounded-b border-black border-x-2 border-b-2 flex justify-center items-start">
+            <div className=" w-[90%] bg-blue-300 rounded-t-none rounded-b border-black border-x-2 border-b-2 flex justify-center items-start">
               {activeServiceButton === "add" && <AdminAdd />}
               {activeServiceButton === "remove" && <AdminRemove />}
               {activeServiceButton === "viewBanker" && <AdminViewBanker />}

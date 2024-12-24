@@ -64,7 +64,7 @@ const BankerLogin = () => {
       <div className="w-[100vw] h-[100vh] flex bg-slate-500 justify-center items-center">
         <div className="bg-white w-[50vw] h-[50vh]  rounded-lg border-slate-100 border-4">
           <h1 className="text-3xl text-black text-center underline mt-2">
-            Login
+            Banker Login
           </h1>
 
           <form className="flex flex-col justify-center items-center h-[80%]">
